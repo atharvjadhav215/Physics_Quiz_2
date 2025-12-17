@@ -231,7 +231,7 @@ const App = () => {
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-white p-6">
       <div className="bg-gray-800 p-8 rounded-xl w-[450px] text-center shadow-2xl shadow-slate-400 border border-gray-700">
         <h1 className="text-3xl font-extrabold mb-6 text-slate-100">
-          Get Your Question...
+          Get 
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <label className="block text-lg font-semibold">
