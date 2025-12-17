@@ -1,286 +1,649 @@
-import { useState } from "react";
-
+import { useState, useRef } from "react";
+import { motion } from "framer-motion";
+import bgImg from "./assets/image.png";
 const divisions = ["CS5", "ET1"];
-const rollNumberRanges = {
-  CS5: { start: 1, end: 92 },
-  ET1: { start: 1, end: 103 },
-};
 
 const setLinks = {
-  A: "https://drive.google.com/file/d/1Q2XfUlM6695H9OkyYag9RDD9NQPC1lsy/view?usp=sharing",
-  B: "https://drive.google.com/file/d/1P2p26o_0-apeRcTacfTxPyNy7Cfp-qo_/view?usp=sharing",
+  A: "https://drive.google.com/file/d/1Q2XfUlM6695H9OkyYag9RDD9NQPC1lsy/preview?usp=sharing",
+  B: "https://drive.google.com/file/d/1P2p26o_0-apeRcTacfTxPyNy7Cfp-qo_/preview?usp=sharing",
 };
 
-// Mapping roll numbers to Set A or Set B
 const rollSetMap = {
-  "CS5-01": "B",
-  "CS5-02": "A",
-  "CS5-03": "A",
-  "CS5-04": "A",
-  "CS5-05": "A",
-  "CS5-06": "B",
-  "CS5-07": "B",
-  "CS5-08": "A",
-  "CS5-09": "A",
-  "CS5-10": "B",
-  "CS5-11": "A",
-  "CS5-12": "A",
-  "CS5-13": "A",
-  "CS5-15": "B",
-  "CS5-16": "B",
-  "CS5-17": "A",
-  "CS5-18": "B",
-  "CS5-19": "A",
-  "CS5-20": "A",
-  "CS5-21": "A",
-  "CS5-22": "B",
-  "CS5-23": "B",
-  "CS5-24": "A",
-  "CS5-25": "B",
-  "CS5-26": "B",
-  "CS5-27": "B",
-  "CS5-28": "B",
-  "CS5-29": "B",
-  "CS5-30": "A",
-  "CS5-31": "B",
-  "CS5-32": "B",
-  "CS5-33": "B",
-  "CS5-34": "A",
-  "CS5-35": "A",
-  "CS5-36": "B",
-  "CS5-37": "B",
-  "CS5-38": "A",
-  "CS5-39": "A",
-  "CS5-40": "B",
-  "CS5-41": "A",
-  "CS5-42": "A",
-  "CS5-43": "B",
-  "CS5-44": "A",
-  "CS5-45": "B",
-  "CS5-46": "B",
-  "CS5-47": "A",
-  "CS5-48": "B",
-  "CS5-49": "B",
-  "CS5-50": "B",
-  "CS5-51": "B",
-  "CS5-52": "B",
-  "CS5-53": "A",
-  "CS5-54": "A",
-  "CS5-55": "A",
-  "CS5-56": "A",
-  "CS5-57": "A",
-  "CS5-58": "B",
-  "CS5-59": "B",
-  "CS5-60": "A",
-  "CS5-61": "A",
-  "CS5-62": "B",
-  "CS5-63": "B",
-  "CS5-64": "B",
-  "CS5-65": "B",
-  "CS5-66": "B",
-  "CS5-67": "B",
-  "CS5-68": "B",
-  "CS5-69": "B",
-  "CS5-70": "A",
-  "CS5-71": "B",
-  "CS5-72": "B",
-  "CS5-73": "A",
-  "CS5-75": "B",
-  "CS5-76": "A",
-  "CS5-77": "A",
-  "CS5-78": "B",
-  "CS5-79": "A",
-  "CS5-80": "B",
-  "CS5-81": "A",
-  "CS5-82": "A",
-  "CS5-83": "A",
-  "CS5-84": "B",
-  "CS5-85": "B",
-  "CS5-86": "B",
-  "CS5-87": "A",
-  "CS5-88": "B",
-  "CS5-89": "A",
-  "CS5-90": "A",
-  "CS5-91": "A",
-  "CS5-92": "A",
-  "ET1-01": "B",
-  "ET1-02": "A",
-  "ET1-03": "A",
-  "ET1-04": "B",
-  "ET1-05": "B",
-  "ET1-06": "B",
-  "ET1-07": "B",
-  "ET1-08": "B",
-  "ET1-09": "B",
-  "ET1-10": "B",
-  "ET1-11": "B",
-  "ET1-14": "B",
-  "ET1-15": "B",
-  "ET1-16": "A",
-  "ET1-17": "B",
-  "ET1-18": "B",
-  "ET1-19": "A",
-  "ET1-20": "A",
-  "ET1-21": "B",
-  "ET1-22": "A",
-  "ET1-23": "B",
-  "ET1-25": "B",
-  "ET1-26": "A",
-  "ET1-27": "B",
-  "ET1-28": "B",
-  "ET1-29": "B",
-  "ET1-30": "B",
-  "ET1-31": "A",
-  "ET1-32": "B",
-  "ET1-33": "B",
-  "ET1-35": "B",
-  "ET1-36": "B",
-  "ET1-37": "B",
-  "ET1-38": "B",
-  "ET1-39": "B",
-  "ET1-40": "A",
-  "ET1-42": "A",
-  "ET1-43": "A",
-  "ET1-44": "B",
-  "ET1-45": "B",
-  "ET1-46": "B",
-  "ET1-47": "A",
-  "ET1-48": "B",
-  "ET1-49": "B",
-  "ET1-50": "B",
-  "ET1-51": "B",
-  "ET1-52": "A",
-  "ET1-53": "B",
-  "ET1-54": "B",
-  "ET1-55": "A",
-  "ET1-56": "B",
-  "ET1-57": "A",
-  "ET1-58": "B",
-  "ET1-60": "A",
-  "ET1-61": "A",
-  "ET1-62": "B",
-  "ET1-63": "B",
-  "ET1-64": "B",
-  "ET1-65": "B",
-  "ET1-66": "B",
-  "ET1-67": "B",
-  "ET1-68": "B",
-  "ET1-70": "A",
-  "ET1-71": "B",
-  "ET1-72": "A",
-  "ET1-73": "B",
-  "ET1-74": "A",
-  "ET1-75": "B",
-  "ET1-76": "B",
-  "ET1-78": "A",
-  "ET1-79": "A",
-  "ET1-80": "B",
-  "ET1-81": "A",
-  "ET1-82": "A",
-  "ET1-83": "B",
-  "ET1-84": "B",
-  "ET1-85": "A",
-  "ET1-86": "A",
-  "ET1-87": "B",
-  "ET1-88": "B",
-  "ET1-89": "B",
-  "ET1-90": "B",
-  "ET1-91": "B",
-  "ET1-92": "A",
-  "ET1-93": "B",
-  "ET1-94": "A",
-  "ET1-95": "B",
-  "ET1-96": "A",
-  "ET1-97": "B",
-  "ET1-98": "B",
-  "ET1-99": "B",
-  "ET1-100": "A",
-  "ET1-101": "B",
-  "ET1-102": "B",
-  "ET1-103": "B",
+  202501040001: "A",
+  202501040002: "B",
+  202501040003: "B",
+  202501040004: "B",
+  202501040005: "B",
+  202501040006: "B",
+  202501040007: "A",
+  202501040008: "A",
+  202501040009: "B",
+  202501040010: "B",
+  202501040011: "B",
+  202501040012: "B",
+  202501040013: "B",
+  202501040014: "B",
+  202501040015: "A",
+  202501040016: "B",
+  202501040017: "A",
+  202501040018: "B",
+  202501040019: "A",
+  202501040020: "B",
+  202501040021: "B",
+  202501040022: "B",
+  202501040023: "B",
+  202501040024: "A",
+  202501040025: "A",
+  202501040026: "B",
+  202501040027: "A",
+  202501040028: "A",
+  202501040029: "B",
+  202501040030: "A",
+  202501040031: "B",
+  202501040032: "A",
+  202501040033: "A",
+  202501040034: "B",
+  202501040035: "B",
+  202501040036: "A",
+  202501040037: "A",
+  202501040038: "A",
+  202501040039: "B",
+  202501040040: "A",
+  202501040041: "B",
+  202501040042: "B",
+  202501040043: "B",
+  202501040044: "B",
+  202501040045: "A",
+  202501040046: "B",
+  202501040047: "B",
+  202501040048: "B",
+  202501040049: "B",
+  202501040050: "B",
+  202501040051: "B",
+  202501040052: "B",
+  202501040053: "B",
+  202501040054: "B",
+  202501040055: "B",
+  202501040056: "B",
+  202501040057: "B",
+  202501040058: "B",
+  202501040059: "B",
+  202501040060: "B",
+  202501040061: "B",
+  202501040062: "B",
+  202501040063: "B",
+  202501040064: "B",
+  202501040065: "A",
+  202501040066: "A",
+  202501040067: "A",
+  202501040068: "A",
+  202501040069: "B",
+  202501040070: "A",
+  202501040071: "B",
+  202501040072: "B",
+  202501040073: "B",
+  202501040074: "A",
+  202501040075: "A",
+  202501040076: "B",
+  202501040077: "A",
+  202501040078: "B",
+  202501040079: "B",
+  202501040080: "A",
+  202501040081: "B",
+  202501040083: "A",
+  202501040084: "A",
+  202501040085: "B",
+  202501040086: "B",
+  202501040087: "B",
+  202501040088: "B",
+  202501040089: "A",
+  202501040090: "B",
+  202501040091: "B",
+  202501040092: "B",
+  202501040093: "B",
+  202501040094: "B",
+  202501040095: "B",
+  202501040096: "B",
+  202501040097: "A",
+  202501040098: "B",
+  202501040099: "B",
+  202501040100: "B",
+  202501040101: "B",
+  202501040102: "B",
+  202501040103: "B",
+  202501040104: "B",
+  202501040105: "B",
+  202501040106: "A",
+  202501040107: "B",
+  202501040108: "B",
+  202501040109: "A",
+  202501040110: "B",
+  202501040111: "A",
+  202501040112: "A",
+  202501040113: "A",
+  202501040114: "B",
+  202501040115: "A",
+  202501040116: "B",
+  202501040117: "A",
+  202501040118: "A",
+  202501040119: "B",
+  202501040120: "B",
+  202501040121: "A",
+  202501040122: "B",
+  202501040123: "B",
+  202501040124: "B",
+  202501040125: "B",
+  202501040126: "B",
+  202501040127: "B",
+  202501040128: "B",
+  202501040129: "B",
+  202501040130: "B",
+  202501040131: "A",
+  202501040132: "B",
+  202501040133: "B",
+  202501040134: "B",
+  202501040135: "B",
+  202501040136: "B",
+  202501040137: "B",
+  202501040138: "B",
+  202501040139: "B",
+  202501040140: "B",
+  202501040141: "A",
+  202501040142: "A",
+  202501040143: "A",
+  202501040144: "B",
+  202501040145: "B",
+  202501040146: "A",
+  202501040147: "A",
+  202501040148: "A",
+  202501040149: "B",
+  202501040150: "A",
+  202501040151: "A",
+  202501040152: "B",
+  202501040154: "B",
+  202501040155: "B",
+  202501040156: "B",
+  202501040157: "B",
+  202501040158: "A",
+  202501040159: "A",
+  202501040160: "A",
+  202501040161: "A",
+  202501040162: "B",
+  202501040163: "B",
+  202501040164: "B",
+  202501040165: "B",
+  202501040166: "B",
+  202501040167: "B",
+  202501040168: "A",
+  202501040169: "B",
+  202501040170: "B",
+  202501040171: "B",
+  202501040172: "B",
+  202501040173: "B",
+  202501040175: "B",
+  202501040176: "B",
+  202501040177: "B",
+  202501040178: "B",
+  202501040179: "B",
+  202501040180: "A",
+  202501040181: "A",
+  202501040182: "B",
+  202501040183: "B",
+  202501040184: "B",
+  202501040185: "B",
+  202501040186: "B",
+  202501040187: "A",
+  202501040188: "A",
+  202501040189: "B",
+  202501040191: "A",
+  202501040192: "B",
+  202501040193: "A",
+  202501040194: "B",
+  202501040195: "B",
+  202501040197: "B",
+  202501040198: "B",
+  202501040199: "B",
+  202501040200: "A",
+  202501040201: "B",
+  202501040202: "B",
+  202501040203: "B",
+  202501040204: "B",
+  202501040205: "A",
+  202501040206: "B",
+  202501040207: "B",
+  202501040208: "B",
+  202501040209: "A",
+  202501040210: "A",
+  202501040211: "B",
+  202501040212: "B",
+  202501040213: "B",
+  202501040214: "B",
+  202501040215: "B",
+  202501040217: "B",
+  202501040218: "A",
+  202501040219: "B",
+  202501040221: "B",
+  202501040222: "B",
+  202501040223: "B",
+  202501040224: "B",
+  202501040225: "A",
+  202501040229: "B",
+  202501040230: "B",
+  202501040231: "B",
+  202501040232: "B",
+  202501040233: "B",
+  202501040235: "A",
+  202501040236: "B",
+  202501040239: "B",
+  202501040240: "B",
+  202501040241: "A",
+  202501040242: "A",
+  202501040243: "B",
+  202501040244: "B",
+  202501040245: "A",
+  202501040246: "B",
+  202501040247: "A",
+  202501040248: "B",
+  202501040249: "B",
+  202501040253: "B",
+  202501040254: "B",
+  202501040255: "B",
+  202501040256: "B",
+  202501040257: "B",
+  202501040261: "B",
+  202501040263: "B",
+  202501040264: "B",
+  202501040265: "B",
+  202501040266: "A",
+  202501040269: "B",
+  202501040271: "B",
+  202501040272: "B",
+  202501040273: "B",
+  202501040274: "A",
+  202501040275: "A",
+  202501040278: "B",
+  202501040279: "B",
+  202501040280: "B",
+  202501040281: "B",
+  202501040283: "B",
+  202501040284: "B",
+  202501040285: "B",
+  202501040286: "B",
+  202501040287: "A",
+  202501040288: "A",
+  202501040289: "B",
+  202501040290: "A",
+  202501040291: "B",
+  202501040292: "A",
+  202501040294: "A",
+  202501040295: "B",
+  202501040296: "B",
+  202501040298: "B",
+  202501040301: "B",
+  202501040302: "B",
+  202501040303: "A",
+  202501040304: "B",
+  202501040305: "A",
+  202501040306: "B",
+  202501040307: "B",
+  202501040308: "B",
+  202501040309: "B",
+  202501040310: "B",
+  202501040311: "A",
+  202501040314: "B",
+  202501040318: "B",
+  202501040319: "A",
+  202501040322: "B",
+  202501040324: "B",
+  202501040326: "B",
+  202501040328: "B",
+  202501040329: "B",
+  202501040332: "B",
+  202501040333: "B",
+  202501040334: "B",
+  202501040335: "B",
+  202501040339: "A",
+  202501040340: "B",
+  202501040341: "A",
+  202501040342: "A",
+  202501040343: "A",
+  202501040344: "B",
+  202501040345: "B",
+  202501040346: "B",
+  202501040347: "A",
+  202501040348: "B",
+  202501040349: "B",
+  202501040350: "B",
+  202501040351: "B",
+  202501040352: "B",
+  202501040353: "B",
+  202501040354: "B",
+  202501040355: "B",
+  202501040356: "A",
+  202501040357: "B",
+  202501040358: "A",
+  202501040359: "B",
+  202501040361: "B",
+  202501040362: "B",
+  202501040363: "A",
+  202501040365: "A",
+  202501040366: "A",
+  202501040367: "B",
+  202501040368: "A",
+  202501040370: "B",
+  202501040371: "B",
+  202501040372: "B",
+  202501040373: "B",
+  202501040375: "B",
+  202501040376: "A",
+  202501040377: "A",
+  202501040378: "B",
+  202501040380: "B",
+  202501040381: "B",
+  202501040382: "B",
+  202501040383: "B",
+  202501040385: "B",
+  202501040386: "A",
+  202501040388: "A",
+  202501040389: "A",
+  202501040390: "B",
+  202501040391: "B",
+  202501040392: "B",
+  202501040393: "B",
+  202501040394: "B",
+  202501040395: "B",
+  202501040396: "B",
+  202501040397: "B",
+  202501040398: "B",
+  202501040399: "B",
+  202501040400: "A",
+  202501040401: "B",
+  202501040402: "B",
+  202501040403: "B",
+  202501040404: "B",
+  202501040405: "B",
+  202501040406: "A",
+  202501040407: "A",
+  202501040408: "A",
+  202501040409: "A",
+  202501040410: "A",
+  202501040411: "B",
+  202501040413: "B",
+  202501040414: "A",
+  202501040415: "B",
+  202501040416: "A",
+  202501040417: "B",
+  202501040418: "B",
+  202501040419: "A",
+  202501040420: "A",
+  202501040421: "B",
+  202501040422: "B",
+  202501040423: "B",
+  202501040424: "A",
+  202501040425: "B",
+  202501040426: "B",
+  202501040427: "B",
+  202501040428: "A",
+  202501040429: "A",
+  202501040430: "A",
+  202501040432: "B",
+  202501040433: "A",
+  202501040434: "B",
+  202501040435: "B",
+  202501040436: "A",
+  202501040437: "A",
+  202501040438: "A",
+  202501040439: "B",
+  202501040440: "A",
+  202501040441: "A",
+  202501040442: "B",
+  202501040443: "A",
+  202501040444: "A",
+  202501040445: "B",
+  202501040446: "A",
+  202501040447: "A",
+  202501040448: "A",
+  202501040449: "A",
+  202501040450: "A",
+  202501040451: "B",
+  202501040452: "B",
+  202501040453: "A",
+  202501040454: "B",
+  202501040455: "A",
+  202501040456: "A",
+  202501040457: "A",
+  202501040458: "B",
+  202501040459: "B",
+  202501040460: "A",
+  202501040461: "A",
+  202501040462: "B",
+
+  202401050013: "A",
+
+  202501050001: "A",
+  202501050002: "A",
+  202501050003: "B",
+  202501050004: "B",
+  202501050006: "A",
+  202501050007: "B",
+  202501050009: "A",
+  202501050010: "A",
+  202501050011: "B",
+  202501050012: "B",
+  202501050013: "A",
+  202501050014: "B",
+  202501050015: "B",
+  202501050016: "B",
+  202501050017: "B",
+  202501050018: "A",
+  202501050019: "B",
+  202501050020: "A",
+  202501050021: "B",
+  202501050022: "B",
+  202501050023: "B",
+  202501050024: "B",
+  202501050025: "B",
+  202501050026: "A",
+  202501050027: "A",
+  202501050028: "B",
+  202501050029: "B",
+  202501050030: "B",
+  202501050031: "A",
+  202501050032: "A",
+  202501050033: "B",
+  202501050034: "B",
+  202501050035: "B",
+  202501050036: "B",
+  202501050037: "A",
+  202501050038: "B",
+  202501050040: "B",
+  202501050043: "B",
+  202501050045: "A",
+  202501050046: "B",
+  202501050047: "B",
+  202501050048: "A",
+  202501050049: "A",
+  202501050050: "A",
+  202501050051: "B",
+  202501050052: "A",
+  202501050053: "A",
+  202501050054: "A",
+  202501050056: "A",
+  202501050057: "B",
+  202501050058: "B",
+  202501050059: "A",
+  202501050060: "A",
+  202501050061: "A",
+  202501050062: "A",
+  202501050063: "B",
 };
 
 const App = () => {
-  const [division, setDivision] = useState("");
-  const [rollNumber, setRollNumber] = useState("");
+  const [prnDigits, setPrnDigits] = useState(Array(12).fill(""));
+  const inputsRef = useRef([]);
+  const [pdfUrl, setPdfUrl] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const key = `${division}-${rollNumber.padStart(2, "0")}`;
-    const assignedSet = rollSetMap[key];
-    if (assignedSet) {
-      window.open(setLinks[assignedSet], "_blank");
-    } else {
-      alert("No set assigned to this roll number.");
+  const prn = prnDigits.join("");
+
+  const handleChange = (value, index) => {
+    if (!/^\d?$/.test(value)) return;
+
+    const newDigits = [...prnDigits];
+    newDigits[index] = value;
+    setPrnDigits(newDigits);
+
+    if (value && index < 11) {
+      inputsRef.current[index + 1].focus();
     }
   };
 
-  const rollNumbers = division
-    ? Array.from(
-        {
-          length:
-            rollNumberRanges[division].end -
-            rollNumberRanges[division].start +
-            1,
-        },
-        (_, i) => (rollNumberRanges[division].start + i).toString()
-      )
-    : [];
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && !prnDigits[index] && index > 0) {
+      inputsRef.current[index - 1].focus();
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (prn.length !== 12) {
+      alert("Please enter complete 12-digit PRN.");
+      return;
+    }
+
+    const assignedSet = rollSetMap[prn] ?? rollSetMap[Number(prn)];
+
+    if (assignedSet) {
+      setPdfUrl(setLinks[assignedSet]); // OPEN MODAL
+    } else {
+      alert("No set assigned to this PRN.");
+    }
+  };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-900 to-gray-900 text-white p-6">
-      <div className="bg-gray-800 p-8 rounded-xl w-[450px] text-center shadow-2xl shadow-slate-400 border border-gray-700">
-        <h1 className="text-3xl font-extrabold mb-6 text-slate-100">
-          Get 
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="min-h-screen  flex items-center justify-center md:p-6 p-3"
+      style={{
+        backgroundImage: `url(${bgImg})`,
+        backgroundSize: "cover", // 👈 fills entire screen
+        backgroundPosition: "center", // 👈 centers image
+        backgroundRepeat: "no-repeat", // 👈 no tiling
+      }}
+    >
+      <motion.div
+        initial={{ y: 50, opacity: 0, scale: 0.95 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-lg rounded-2xl 
+        bg-white backdrop-blur-xl 
+        shadow-xl border border-slate-200 md:p-8 p-4"
+      >
+        <h1 className="md:text-3xl text-xl font-bold text-slate-800 text-center mb-2">
+          Get Your Question
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <label className="block text-lg font-semibold">
-            Select Your Division:
-          </label>
-          <select
-            value={division}
-            onChange={(e) => {
-              setDivision(e.target.value);
-              setRollNumber("");
-            }}
-            className="w-full p-3 border border-gray-500 bg-gray-700 rounded focus:ring-2 focus:ring-slate-100"
-            required
-          >
-            <option value="">Select Batch</option>
-            {divisions.map((div) => (
-              <option key={div} value={div} className="bg-gray-800">
-                {div}
-              </option>
-            ))}
-          </select>
+    
 
-          <label className="block text-lg font-semibold">
-            Enter Your Roll Number:
-          </label>
-          <select
-            value={rollNumber}
-            onChange={(e) => setRollNumber(e.target.value)}
-            className="w-full p-3 border border-gray-500 bg-gray-700 rounded focus:ring-2 focus:ring-slate-100"
-            required
-            disabled={!division}
-          >
-            <option value="">Select Roll Number</option>
-            {rollNumbers.map((num) => (
-              <option key={num} value={num} className="bg-gray-800">
-                {num}
-              </option>
-            ))}
-          </select>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* OTP STYLE INPUT */}
+          <div>
+            <label className="block mb-3 text-slate-700 font-medium text-center">
+              PRN Number
+            </label>
 
-          <button
+            <div className="md:flex justify-center gap-1 py-1 md:overflow-x-auto grid grid-cols-6  ">
+              {prnDigits.map((digit, index) => (
+                <motion.input
+                  key={index}
+                  ref={(el) => (inputsRef.current[index] = el)}
+                  value={digit}
+                  onChange={(e) => handleChange(e.target.value, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  maxLength={1}
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: index * 0.03 }}
+                  className="w-8 h-10 text-center text-lg font-bold
+                  rounded-lg border border-slate-300
+                  bg-white text-slate-800
+                  focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* BUTTON */}
+          <motion.button
+            whileHover="hover"
+            initial="rest"
+            animate="rest"
+            className="relative w-full py-3 rounded-lg 
+            border border-blue-600 text-blue-600 font-semibold 
+            overflow-hidden"
             type="submit"
-            className="w-full bg-slate-100 text-gray-900 font-bold py-3 rounded-lg hover:bg-slate-300 transition transform hover:scale-105 disabled:bg-gray-500 disabled:cursor-not-allowed"
           >
-            Get Your Question
-          </button>
+            <motion.span
+              variants={{
+                rest: { x: "-100%" },
+                hover: { x: "0%" },
+              }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="absolute inset-0 bg-gradient-to-r 
+              from-pink-500 via-purple-500 to-blue-500"
+            />
+
+            <motion.span
+              variants={{
+                rest: { color: "#2563eb" },
+                hover: { color: "#ffffff" },
+              }}
+              transition={{ duration: 0.3 }}
+              className="relative z-10"
+            >
+              Ready to Get Your Set?
+            </motion.span>
+          </motion.button>
         </form>
-      </div>
-    </div>
+
+      </motion.div>
+      {/* PDF MODAL */}
+      {pdfUrl && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 flex items-center justify-center
+    bg-black/50 backdrop-blur-sm"
+        >
+          <motion.div
+            initial={{ scale: 0.9, y: 30 }}
+            animate={{ scale: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="relative w-[95%] max-w-4xl h-[85vh]
+      bg-white rounded-xl shadow-2xl overflow-hidden"
+          >
+            {/* CLOSE BUTTON */}
+            <button
+              onClick={() => setPdfUrl(null)}
+              className="absolute top-3 right-3 z-50
+        w-9 h-9 rounded-full bg-slate-200
+        hover:bg-red-500 hover:text-white
+        transition font-bold"
+            >
+              ✕
+            </button>
+
+            {/* PDF VIEWER */}
+            <iframe
+              src={pdfUrl}
+              title="Question Paper"
+              className="w-full h-full"
+            />
+          </motion.div>
+        </motion.div>
+      )}
+    </motion.div>
   );
 };
 
