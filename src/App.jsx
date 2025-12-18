@@ -4,8 +4,8 @@ import bgImg from "./assets/image.png";
 const divisions = ["CS5", "ET1"];
 
 const setLinks = {
-  A: "https://drive.google.com/file/d/1Q2XfUlM6695H9OkyYag9RDD9NQPC1lsy/preview?usp=sharing",
-  B: "https://drive.google.com/file/d/1P2p26o_0-apeRcTacfTxPyNy7Cfp-qo_/preview?usp=sharing",
+  A: "https://drive.google.com/file/d/1ak0EB9SP5Ijbh6tjblNPboyMwjCqp7WV/preview?usp=sharing",
+  B: "https://drive.google.com/file/d/1q7cTvOtpTDhtCm5TD8KOCZHqDQhZ6TLX/preview?usp=sharing",
 };
 
 const rollSetMap = {
